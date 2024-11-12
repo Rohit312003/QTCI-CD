@@ -1,0 +1,54 @@
+name: Build and Upload Executable
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # You can adjust to your preferred OS
+
+    steps:
+    # Step 1: Checkout code
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    # Step 2: Install Qt and build tools
+    - name: Install Qt and build tools
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y qt5-qmake qtbase5-dev build-essential
+
+    # Step 3: Create build directory
+    - name: Create build directory
+      run: mkdir -p build
+
+    # Step 4: Generate Makefile with qmake
+    - name: Generate Makefile with qmake
+      run: qmake project.pro -o build/Makefile  # Adjust path if necessary
+
+    # Step 5: Build the project
+    - name: Build the project
+      run: make -C build
+
+    # Step 6: List files in the build directory to confirm the executable
+    - name: List files in the build directory
+      run: ls -la ./build
+
+    # Step 7: Upload the built executable as an artifact
+    - name: Upload executable
+      uses: actions/upload-artifact@v3
+      with:
+        name: executable
+        path: ./build/myapp  # The correct executable name
+        if-no-files-found: warn
+        include-hidden-files: false
+
+    # Step 8: Upload .txt files from the output directory (if any)
+    - name: Upload .txt files
+      uses: actions/upload-artifact@v3
+      with:
+        name: txt-files
+        path: ./output/*.txt
