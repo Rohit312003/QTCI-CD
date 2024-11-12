@@ -1,11 +1,19 @@
-#include <QCoreApplication>
+#include <fstream>
 #include <iostream>
+#include <filesystem>  // C++17 for creating directories
 
-int main(int argc, char *argv[])
-{
-    QCoreApplication a(argc, argv);
+int main() {
+    // Create the 'output' directory if it doesn't exist
+    std::filesystem::create_directory("output");
 
-    std::cout << "Hello, World!" << std::endl;  // Output to console, not to files
+    // Generate 50 txt files in the 'output' folder
+    for (int i = 0; i < 50; ++i) {
+        std::ofstream file("output/file" + std::to_string(i) + ".txt");
+        file << "This is file " << i;
+        file.close();
+    }
 
-    return a.exec();
+    std::cout << "Created 50 .txt files in the 'output' folder." << std::endl;
+
+    return 0;
 }
