@@ -37,9 +37,9 @@ jobs:
     - name: List files in the build directory
       run: ls -la ./build
 
-    # Step 7: Upload the built executable as an artifact
+    # Step 7: Upload the built executable as an artifact (v4)
     - name: Upload executable
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4  # Upgraded to v4
       with:
         name: executable
         path: ./build/myapp  # The correct executable name
@@ -48,7 +48,7 @@ jobs:
 
     # Step 8: Upload .txt files from the output directory (if any)
     - name: Upload .txt files
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4  # Upgraded to v4
       with:
         name: txt-files
         path: ./output/*.txt
