@@ -1,0 +1,25 @@
+# .github/workflows/ci-cd.yml
+name: QMake CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install Qt
+      run: sudo apt-get install -y qt5-qmake qtbase5-dev
+
+    - name: Generate Makefile with qmake
+      run: qmake project.pro -o Makefile
+
+    - name: Build the project
+      run: make
