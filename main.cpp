@@ -1,7 +1,11 @@
-// main.cpp
+#include <QCoreApplication>
 #include <iostream>
 
-int main() {
-    std::cout << "Hello, GitHub CI/CD with qmake!" << std::endl;
-    return 0;
+int main(int argc, char *argv[])
+{
+    QCoreApplication a(argc, argv);
+
+    std::cout << "Hello, World!" << std::endl;  // Output to console, not to files
+
+    return a.exec();
 }
