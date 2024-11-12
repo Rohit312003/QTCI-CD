@@ -8,7 +8,7 @@ INCLUDEPATH += .
 QT += core gui
 
 SOURCES += main.cpp
-HEADERS += mainwindow.h
+
 
 # Optional: Specify output directory
 DESTDIR = ./build  # Place your executable in the build directory
