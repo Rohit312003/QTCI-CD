@@ -42,7 +42,7 @@ jobs:
       uses: actions/upload-artifact@v4  # Upgraded to v4
       with:
         name: executable
-        path: ./build/myapp  # The correct executable name
+        path: ./build/atul  # The correct executable name
         if-no-files-found: warn
         include-hidden-files: false
 
