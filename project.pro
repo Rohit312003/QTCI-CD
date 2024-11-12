@@ -2,7 +2,7 @@
 
 TEMPLATE = app
 TARGET = myapp  # Replace with your desired executable name
-INCLUDEPATH += .
+
 
 # Adjust if necessary, e.g., add any Qt modules you use
 QT += core gui
