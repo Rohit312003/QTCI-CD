@@ -18,14 +18,17 @@ jobs:
     - name: Install Qt
       run: sudo apt-get install -y qt5-qmake qtbase5-dev
 
+    - name: Create build directory
+      run: mkdir -p build   # Create the build directory if it doesn't exist
+
     - name: Generate Makefile with qmake
-      run: qmake project.pro -o Makefile
+      run: qmake project.pro -o build/Makefile   # Generate the Makefile in the build directory
 
     - name: Build the project
-      run: make
+      run: make -C build   # Build the project from the build directory
 
-    - name: Upload build artifacts
+    - name: Upload executable
       uses: actions/upload-artifact@v3
       with:
-        name: build-files
-        path: ./build   # Adjust this path as needed
+        name: executable
+        path: ./build/*   # Adjust this path as needed
