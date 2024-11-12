@@ -1,7 +1,14 @@
 # project.pro
+
 TEMPLATE = app
-CONFIG += console
-CONFIG -= app_bundle
-CONFIG += c++11
+TARGET = myapp  # Replace with your desired executable name
+INCLUDEPATH += .
+
+# Adjust if necessary, e.g., add any Qt modules you use
+QT += core gui
 
 SOURCES += main.cpp
+HEADERS += mainwindow.h
+
+# Optional: Specify output directory
+DESTDIR = ./build  # Place your executable in the build directory
