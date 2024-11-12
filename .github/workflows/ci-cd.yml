@@ -23,3 +23,9 @@ jobs:
 
     - name: Build the project
       run: make
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: build-files
+        path: ./build   # Adjust this to the correct path of your build files
