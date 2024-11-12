@@ -1,7 +1,7 @@
 # project.pro
 
 TEMPLATE = app
-TARGET = myapp  # Replace with your desired executable name
+TARGET = atul  # Replace with your desired executable name
 
 
 # Adjust if necessary, e.g., add any Qt modules you use
