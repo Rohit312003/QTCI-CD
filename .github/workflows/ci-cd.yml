@@ -56,7 +56,7 @@ jobs:
 
       # Step 2: Download the uploaded artifact
       - name: Download Artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: executable  # Ensure this matches the name used in the upload step
           path: ./release    # Directory where the artifact will be downloaded
