@@ -2,13 +2,15 @@ name: Build and Upload Executable
 
 on:
   push:
+    tags:         # Only trigger on new tags, to create a release
+      - 'v*.*'    # Example: tag format v1.0, v1.1, etc.
     branches: [ main ]
   pull_request:
     branches: [ main ]
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # You can adjust to your preferred OS
+    runs-on: ubuntu-latest
 
     steps:
       # Step 1: Checkout code
@@ -37,22 +39,50 @@ jobs:
       - name: List files in the build directory
         run: ls -la ./build
 
-      # Step 7: Upload the built executable as an artifact (v4)
+      # Step 7: Upload the built executable as an artifact
       - name: Upload executable
-        uses: actions/upload-artifact@v4  # Upgraded to v4
+        uses: actions/upload-artifact@v4
         with:
           name: executable
-          path: ./build/atul  # Adjust the path if needed
+          path: ./build/atul  # The correct executable name
           if-no-files-found: warn
           include-hidden-files: false
 
-      # Step 8: Push the executable back to the repository
-      - name: Push Executable to Repository
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Download the build artifact
+      - name: Download build artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: executable
+          path: ./release  # Download the executable into the release directory
+
+      # Step 3: Create GitHub Release
+      - name: Create Release
+        id: create_release  # This ID is used to reference the release URL later
+        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add ./build/atul  # Adjust path and file name if necessary
-          git commit -m "Add compiled executable [skip ci]" || echo "No changes to commit"
-          git push || echo "No changes to push"
+        with:
+          tag_name: ${{ github.ref_name }}  # Use the tag name as the release version
+          release_name: "Release ${{ github.ref_name }}"
+          body: "Automated release for version ${{ github.ref_name }}"
+          draft: false
+          prerelease: false
+
+      # Step 4: Upload the executable to the release
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./release/atul  # Path to the executable
+          asset_name: atul
+          asset_content_type: application/octet-stream
