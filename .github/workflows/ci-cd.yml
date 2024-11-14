@@ -2,7 +2,7 @@ name: Build and Upload Executable
 
 on:
   push:
-    tags:         # Only trigger on new tags, to create a release
+    tags:         # Only trigger on new tags to create a release
       - 'v*.*'    # Example: tag format v1.0, v1.1, etc.
     branches: [ main ]
   pull_request:
@@ -58,7 +58,7 @@ jobs:
 
       # Step 2: Download the build artifact
       - name: Download build artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3  # Updated to v3
         with:
           name: executable
           path: ./release  # Download the executable into the release directory
