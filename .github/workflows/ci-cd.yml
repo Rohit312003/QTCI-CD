@@ -33,7 +33,7 @@ jobs:
       - name: Build the project
         run: make -C build
 
-      # Step 6: List files in the build directory to verify the executable
+      # Step 6: List files in the build directory to verify if `atul.exe` exists
       - name: List files in build directory
         run: ls -la ./build  # This will show the files in the build directory
 
@@ -42,11 +42,11 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: executable  # Artifact name
-          path: ./build/atul.exe  # Adjust path based on your build output
-          if-no-files-found: error
-          compression-level: 6
-          overwrite: false
-          include-hidden-files: false
+          path: ./build/atul.exe  # Adjust path based on your build output (make sure the executable is in `build/atul.exe`)
+          if-no-files-found: error  # Fail if no files are found at the specified path
+          compression-level: 6  # Optional: controls compression level for artifact
+          overwrite: false  # Prevent overwriting existing artifacts
+          include-hidden-files: false  # Avoid uploading hidden files
 
   download:
     needs: build  # Ensure this job waits for the `build` job to complete
