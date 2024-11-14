@@ -42,7 +42,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: executable  # This is the artifact name you need to reference in the next job
-          path: ./build/output.exe  # Ensure this path matches the generated file
+          path: ./build/atul.exe  # Correct path to your executable (atul.exe)
           if-no-files-found: error
           compression-level: 6
           overwrite: false
@@ -84,7 +84,7 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
           # Add and commit the downloaded .exe file
-          git add ./release/output.exe  # Adjust this path if needed
+          git add ./release/atul.exe  # Correct path to the downloaded .exe file
           git commit -m "Add compiled executable [skip ci]"
 
           # Push the changes back to the repository
