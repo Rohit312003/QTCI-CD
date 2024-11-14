@@ -1,9 +1,7 @@
-name: Build and Upload Executable
+name: Build, Upload, and Download Executable
 
 on:
   push:
-    tags:
-      - 'v*.*'  # Trigger on new tags like v1.0, v1.1, etc.
     branches: [ main ]
   pull_request:
     branches: [ main ]
@@ -14,8 +12,8 @@ jobs:
 
     steps:
       # Step 1: Checkout code
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v3
 
       # Step 2: Install Qt and build tools
       - name: Install Qt and build tools
@@ -43,50 +41,26 @@ jobs:
       - name: Upload executable
         uses: actions/upload-artifact@v4
         with:
-          name: executable
-          path: ./build/atul  # Adjust path if necessary
-          if-no-files-found: error  # Fail if the executable is missing
+          name: executable  # Name of the artifact to match with download
+          path: ./build/atul  # Path to the executable file
+          if-no-files-found: error
 
-  release:
-    needs: build  # Ensure this job waits for the `build` job to complete
+  download:
+    needs: build  # This job will run after the `build` job completes successfully
     runs-on: ubuntu-latest
 
     steps:
       # Step 1: Checkout code
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      # Step 2: Download the build artifact
-      - name: Download build artifact
+      # Step 2: Download the uploaded artifact
+      - name: Download Artifacts
         uses: actions/download-artifact@v3
         with:
-          name: executable  # Ensure this matches the uploaded artifact name in `build` job
-          path: ./release  # Download the executable into the release directory
+          name: executable  # Must match the name used in the upload step
+          path: ./release    # Directory where the artifact will be downloaded
 
-      # Step 3: Verify the downloaded artifact
-      - name: List files in the release directory to verify download
-        run: ls -la ./release
-
-      # Step 4: Create GitHub Release
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref_name }}
-          release_name: "Release ${{ github.ref_name }}"
-          body: "Automated release for version ${{ github.ref_name }}"
-          draft: false
-          prerelease: false
-
-      # Step 5: Upload the executable to the release
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./release/atul  # Path to the executable
-          asset_name: atul
-          asset_content_type: application/octet-stream
+      # Step 3: List files in the release directory to verify download
+      - name: List Files
+        run: ls -R ./release
