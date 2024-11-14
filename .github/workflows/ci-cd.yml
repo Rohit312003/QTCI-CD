@@ -42,7 +42,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: executable  # This is the artifact name you need to reference in the next job
-          path: ./build/atul  # Path to the executable file
+          path: ./build/output.exe  # Path to the .exe file in the build directory
           if-no-files-found: error
 
   download:
@@ -80,8 +80,8 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Add and commit the downloaded executable
-          git add ./release/atul  # Adjust this path to match the downloaded executable file
+          # Add and commit the downloaded .exe file
+          git add ./release/output.exe  # Adjust this path if needed
           git commit -m "Add compiled executable [skip ci]"
 
           # Push the changes back to the repository
