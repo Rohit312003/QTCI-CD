@@ -1,4 +1,4 @@
-name: Build, Upload, and Download Executable
+name: Build, Upload, Download, and Push Executable
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
 
     steps:
       # Step 1: Checkout code
-      - name: Checkout
+      - name: Checkout Code
         uses: actions/checkout@v3
 
       # Step 2: Install Qt and build tools
@@ -50,17 +50,39 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout code
-      - name: Checkout
+      # Step 1: Checkout the repository (including the release folder)
+      - name: Checkout Code
         uses: actions/checkout@v3
 
-      # Step 2: Download the uploaded artifact
+      # Step 2: Ensure the release folder exists and is up-to-date
+      - name: Ensure Release Folder
+        run: |
+          mkdir -p release
+          echo "Release folder is ready."
+
+      # Step 3: Download the uploaded artifact
       - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
           name: executable  # Ensure this matches the name used in the upload step
           path: ./release    # Directory where the artifact will be downloaded
 
-      # Step 3: List files in the release directory to verify download
+      # Step 4: List files in the release directory to verify download
       - name: List Files
         run: ls -R ./release
+
+      # Step 5: Push Executable to Repository
+      - name: Push Executable to Repository
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Configuring git user for commit
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Add and commit the downloaded executable
+          git add ./release/atul  # Adjust this path to match the downloaded executable file
+          git commit -m "Add compiled executable [skip ci]"
+
+          # Push the changes back to the repository
+          git push
