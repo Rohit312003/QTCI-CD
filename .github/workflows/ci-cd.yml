@@ -41,8 +41,8 @@ jobs:
       - name: Upload executable
         uses: actions/upload-artifact@v4
         with:
-          name: executable  # This is the artifact name you need to reference in the next job
-          path: ./build/atul.exe  # Correct path to your executable (atul.exe)
+          name: executable  # Artifact name
+          path: ./build/atul.exe  # Adjust path based on your build output
           if-no-files-found: error
           compression-level: 6
           overwrite: false
@@ -67,7 +67,7 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: executable  # Ensure this matches the name used in the upload step
+          name: executable  # Artifact name
           path: ./release    # Directory where the artifact will be downloaded
 
       # Step 4: List files in the release directory to verify download
