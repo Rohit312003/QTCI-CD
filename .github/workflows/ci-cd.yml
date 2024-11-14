@@ -2,8 +2,8 @@ name: Build and Upload Executable
 
 on:
   push:
-    tags:         # Only trigger on new tags to create a release
-      - 'v*.*'    # Example: tag format v1.0, v1.1, etc.
+    tags:
+      - 'v*.*'  # Trigger on new tags like v1.0, v1.1, etc.
     branches: [ main ]
   pull_request:
     branches: [ main ]
@@ -43,12 +43,12 @@ jobs:
       - name: Upload executable
         uses: actions/upload-artifact@v4
         with:
-          name: executable  # Ensure this name is consistent with the download step
+          name: executable
           path: ./build/atul  # Adjust path if necessary
-          if-no-files-found: error  # Fail the job if the executable is missing
+          if-no-files-found: error  # Fail if the executable is missing
 
   release:
-    needs: build
+    needs: build  # Ensure this job waits for the `build` job to complete
     runs-on: ubuntu-latest
 
     steps:
